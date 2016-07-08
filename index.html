@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Starwars Shop</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body id="main" v-cloak> 
+  <!-- Navbar -->
+    <nav id="custom-bootstrap-menu" class="navbar navbar-default navbar-custom navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><img src="img/logo.png" alt="" height="25"></a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search">
+            <div class="form-group">
+              <input class="form-control" placeholder="Search" type="text" v-model="searchString">
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <!-- View mode : list view & grid view -->
+    <div class="bar">
+      <h5>view mode: </h5>
+      <a class="list-icon" v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'"></a>
+      <a class="grid-icon" v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'"></a>
+    </div>
+    <div class="col-md-9 content">
+      <form >
+        <!-- grid view -->
+        <ul v-if="layout == 'grid'" class="grid row">
+          <li v-for="a in films | searchFor searchString" class="col-md-15 " >
+            <div class="item-poster">
+              <img v-bind:src="a.image" />
+              <div class="detail-poster">
+              {{a.id}}
+                <h5 class=title-movie>Star Wars: {{a.title}}</h5>
+                <div class="col-md-9 price"><h6 class="price-movie">Price: {{a.price | currency}}</h6></div>
+                <div class="col-md-3 buy">
+                  <span class="glyphicon glyphicon-shopping-cart btn btn-buy"  v-on:click="toggleActive(a)" v-bind:class="{ 'active': a.active}"></span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <!-- list view -->
+        <ul v-if="layout == 'list'" class="list">
+          <li v-for="a in films | searchFor searchString"   >
+            <img v-bind:src="a.image"/>
+            <h5 class="title-movie">Star Wars: {{a.title}}</h5>
+            <h5 class="small">{{a.opening_crawl}}</h5>
+            <h5 class="small">Director : {{a.director}}</h5>
+            <span class="glyphicon glyphicon-shopping-cart btn btn-buy" v-on:click="toggleActive(a)"  v-bind:class="{ 'active': a.active}"></span>
+          </li>
+        </ul>
+      </form>
+    </div>
+    <!-- confirmation box -->
+    <div class="col-md-3 right-side">
+      <div class="box-total">
+        <h4>// Total Price</h4>
+        <h1> {{total() | currency}}  </h1>
+        <h5 v-if="sum() == '0'">( 0 item )</h5>
+        <h5 v-if="sum() == '1'">( 1 item )</h5>
+        <h5 v-if="sum() > '1'">( {{sum()}} items )</h5>
+        <button class="btn btn-confirm"><i class="glyphicon glyphicon-ok"> Buy</i></button>
+      </div>
+    </div>
+    <!-- JS -->
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script src="node_modules/vue-resource/dist/vue-resource.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
